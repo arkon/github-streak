@@ -1,13 +1,9 @@
-const contribGraph = document.querySelector('.js-calendar-graph-svg > g');
+var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
 if (contribGraph) {
   // HELPER FUNCTIONS
   // ==========================================================================
 
-  const getDate = function (contribNode) {
-    return contribNode.getAttribute('data-date');
-  };
-
-  const resetStreak = function () {
+  var resetStreak = function () {
     return {
       amount : 0,
       start  : null,
@@ -15,27 +11,31 @@ if (contribGraph) {
     };
   };
 
-  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  const createDateString = function (date) {
-    const parsedDate = new Date(date);
-
-    return `${MONTHS[parsedDate.getUTCMonth()].slice(0, 3)} ${parsedDate.getUTCDate()}, ${parsedDate.getUTCFullYear()}`;
+  var getDate = function (contribNode) {
+    return contribNode.getAttribute('data-date');
   };
 
-  const createStatDiv = function (header, type, data) {
-    const el = document.createElement('div');
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var createDateString = function (date) {
+    var parsedDate = new Date(date);
 
-    const elHeader = document.createElement('p');
-    elHeader.className = 'text-muted';
+    return `${MONTHS[parsedDate.getUTCMonth()]} ${parsedDate.getUTCDate()}, ${parsedDate.getUTCFullYear()}`;
+  };
+
+  var createStatDiv = function (header, type, data) {
+    var el = document.createElement('div');
+    el.className = 'gh-streak-box';
+
+    var elHeader = document.createElement('p');
+    elHeader.className = 'gh-streak-box-header text-muted';
     elHeader.textContent = header;
 
-    const elStat = document.createElement('h1');
-    elStat.textContent = `${data.amount} ${type}`;
+    var elStat = document.createElement('h1');
+    elStat.textContent = data.amount + ' ' + type;
 
-    const elFooter = document.createElement('p');
-    elHeader.className = 'text-muted';
-    elFooter.textContent = `${createDateString(data.start)} – ${createDateString(data.end)}`;
+    var elFooter = document.createElement('p');
+    elFooter.className = 'text-muted';
+    elFooter.textContent = createDateString(data.start)} + ' – ' + createDateString(data.end);
 
     el.appendChild(elHeader);
     el.appendChild(elStat);
@@ -44,36 +44,37 @@ if (contribGraph) {
     return el;
   };
 
-  // DATA HOLDERS
+
+  // DATA
   // ==========================================================================
 
-  const contribContainer = document.getElementById('contributions-calendar');
+  var contribContainer = document.getElementById('contributions-calendar');
 
-  const contribs    = contribGraph.querySelectorAll('rect.day');
-  const contribsLen = contribs.length - 1;
+  var contribs    = contribGraph.querySelectorAll('rect.day');
+  var contribsLen = contribs.length - 1;
 
   // Total contributions
-  let totalContribs   = resetStreak();
+  var totalContribs   = resetStreak();
   totalContribs.start = getDate(contribs[0]);
   totalContribs.end   = getDate(contribs[contribsLen]);
 
   // Longest streak
-  let longestStreak = resetStreak();
+  var longestStreak = resetStreak();
 
   // Current streak
-  let isCurrentStreak = true;
-  let currentStreak   = resetStreak();
+  var isCurrentStreak = true;
+  var currentStreak   = resetStreak();
 
 
   // TALLY UP THE STATS
   // ==========================================================================
 
-  let streak = resetStreak();
-  let newStreak = true;
+  var streak = resetStreak();
+  var newStreak = true;
 
   // Start counting from the end up
-  for (let i = contribsLen; i >= 0; i--) {
-    let count = parseInt(contribs[i].getAttribute('data-count'), 10);
+  for (var i = contribsLen; i >= 0; i--) {
+    var count = parseInt(contribs[i].getAttribute('data-count'), 10);
 
     // Tally up all contributions
     totalContribs.amount += count;

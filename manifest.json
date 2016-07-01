@@ -3,7 +3,7 @@
 
   "name": "github-streak",
   "version": "1.0.0",
-  "description": "Displays your GitHub streak again.",
+  "description": "Displays contribution stats/streak on GitHub profiles.",
   "homepage_url": "https://github.com/arkon/github-streak",
 
   "icons": {
@@ -15,7 +15,8 @@
   "content_scripts": [
     {
       "matches": ["*://github.com/*"],
-      "js": ["index.js"],
+      "js": ["streak.js"],
+      "css": ["streak.css"],
       "run_at": "document_end"
     }
   ]
