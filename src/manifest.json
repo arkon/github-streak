@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "github-streak",
+  "name": "GitHub Profile Streak",
   "version": "1.0.0",
-  "description": "Displays contribution stats/streak on GitHub profiles.",
+  "description": "Displays contribution stats and streak data on GitHub profiles.",
   "homepage_url": "https://github.com/arkon/github-streak",
 
   "icons": {
