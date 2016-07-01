@@ -17,11 +17,32 @@ if (contribGraph) {
     return contribNode.getAttribute('data-date');
   };
 
-  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var createDateString = function (date) {
-    var parsedDate = new Date(date);
+  var MONTHS = [
+    'January', 'February', 'March', 'April',
+    'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'
+  ];
 
-    return `${MONTHS[parsedDate.getUTCMonth()]} ${parsedDate.getUTCDate()}, ${parsedDate.getUTCFullYear()}`;
+  var dateWithoutYear = function (date) {
+    return MONTHS[date.getUTCMonth()] + ' ' + date.getUTCDate();
+  };
+
+  var dateWithYear = function (date) {
+    return MONTHS[date.getUTCMonth()].slice(0, 3) + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear();
+  }
+
+  var createDateString = function (startDate, endDate) {
+    var start = new Date(startDate);
+    var end   = new Date(endDate);
+
+    var startYear = start.getUTCFullYear();
+    var endYear   = end.getUTCFullYear();
+
+    if (startYear === endYear) {
+      return dateWithoutYear(start) + ' – ' + dateWithoutYear(end);
+    } else {
+      return dateWithYear(start) + ' – ' + dateWithYear(end);
+    }
   };
 
   var createStatDiv = function (header, type, data) {
@@ -33,11 +54,14 @@ if (contribGraph) {
     elHeader.textContent = header;
 
     var elStat = document.createElement('h1');
+    if (type === 'days' && data.amount === 1) {
+      type = 'day';
+    }
     elStat.textContent = data.amount + ' ' + type;
 
     var elFooter = document.createElement('p');
     elFooter.className = 'text-muted';
-    elFooter.textContent = createDateString(data.start) + ' – ' + createDateString(data.end);
+    elFooter.textContent = createDateString(data.start, data.end);
 
     el.appendChild(elHeader);
     el.appendChild(elStat);
@@ -72,6 +96,7 @@ if (contribGraph) {
   // ==========================================================================
 
   var streak = resetStreak();
+
   var newStreak = true;
 
   // Start counting from the end up
@@ -92,7 +117,12 @@ if (contribGraph) {
       }
     } else {
       // End of streak (no contributions for this day)
-      streak.start = getDate(contribs[i + 1]);
+      var startDate = i === contribsLen ? contribsLen : i + 1;
+      streak.start = getDate(contribs[startDate]);
+
+      if (streak.amount === 0) {
+        streak.end = streak.start;
+      }
 
       // If not the current day and is the first streak, set the current streak
       if (isCurrentStreak && i !== contribsLen) {
