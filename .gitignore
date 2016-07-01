@@ -1,0 +1,10 @@
+Desktop.ini
+ehthumbs.db
+Thumbs.db
+$RECYCLE.BIN/
+._*
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+*.zip
