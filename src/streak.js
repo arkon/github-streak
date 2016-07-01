@@ -1,3 +1,5 @@
+'use strict';
+
 var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
 if (contribGraph) {
   // HELPER FUNCTIONS
@@ -35,7 +37,7 @@ if (contribGraph) {
 
     var elFooter = document.createElement('p');
     elFooter.className = 'text-muted';
-    elFooter.textContent = createDateString(data.start)} + ' – ' + createDateString(data.end);
+    elFooter.textContent = createDateString(data.start) + ' – ' + createDateString(data.end);
 
     el.appendChild(elHeader);
     el.appendChild(elStat);
