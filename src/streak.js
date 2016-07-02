@@ -1,9 +1,10 @@
 'use strict';
 
-var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
-if (contribGraph) {
+// Check if we're on a profile page
+if (document.body.classList.contains('page-profile')) {
+
   // HELPER FUNCTIONS
-  // ==========================================================================
+  // ========================================================================
 
   var resetStreak = function () {
     return {
@@ -28,7 +29,9 @@ if (contribGraph) {
   };
 
   var dateWithYear = function (date) {
-    return MONTHS[date.getUTCMonth()].slice(0, 3) + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear();
+    return MONTHS[date.getUTCMonth()].slice(0, 3) + ' ' +
+      date.getUTCDate() + ', ' +
+      date.getUTCFullYear();
   }
 
   var createDateString = function (startDate, endDate) {
@@ -70,83 +73,115 @@ if (contribGraph) {
   };
 
 
-  // DATA
-  // ==========================================================================
+  // FUNCTION TO CREATE STATS
+  // ===========================================================================
 
-  var contribContainer = document.getElementById('contributions-calendar');
+  var initStats = function (contribGraph) {
+    var contribContainer = document.getElementById('contributions-calendar');
 
-  var contribs    = contribGraph.querySelectorAll('rect.day');
-  var contribsLen = contribs.length - 1;
+    var contribs    = contribGraph.querySelectorAll('rect.day');
+    var contribsLen = contribs.length - 1;
 
-  // Total contributions
-  var totalContribs   = resetStreak();
-  totalContribs.start = getDate(contribs[0]);
-  totalContribs.end   = getDate(contribs[contribsLen]);
+    // Total contributions
+    var totalContribs   = resetStreak();
+    totalContribs.start = getDate(contribs[0]);
+    totalContribs.end   = getDate(contribs[contribsLen]);
 
-  // Longest streak
-  var longestStreak = resetStreak();
+    // Longest streak
+    var longestStreak = resetStreak();
 
-  // Current streak
-  var isCurrentStreak = true;
-  var currentStreak   = resetStreak();
+    // Current streak
+    var isCurrentStreak = true;
+    var currentStreak   = resetStreak();
 
 
-  // TALLY UP THE STATS
-  // ==========================================================================
+    // TALLY UP THE STATS
+    // =======================================================================
 
-  var streak = resetStreak();
+    var streak = resetStreak();
 
-  var newStreak = true;
+    var newStreak = true;
 
-  // Start counting from the end up
-  for (var i = contribsLen; i >= 0; i--) {
-    var count = parseInt(contribs[i].getAttribute('data-count'), 10);
+    // Start counting from the end up
+    for (var i = contribsLen; i >= 0; i--) {
+      var count = parseInt(contribs[i].getAttribute('data-count'), 10);
 
-    // Tally up all contributions
-    totalContribs.amount += count;
+      // Tally up all contributions
+      totalContribs.amount += count;
 
-    // If there's a contribution, add it to the current streak
-    if (count > 0) {
-      streak.amount++;
+      // If there's a contribution, add it to the current streak
+      if (count > 0) {
+        streak.amount++;
 
-      // Record the end date for a new streak
-      if (newStreak) {
-        streak.end = getDate(contribs[i]);
-        newStreak = false;
+        // Record the end date for a new streak
+        if (newStreak) {
+          streak.end = getDate(contribs[i]);
+          newStreak = false;
+        }
+      }
+
+      // End of streak (no contributions for this day) or first day
+      if (count === 0 || i === 0) {
+        var startDate = i === contribsLen ? contribsLen : i + 1;
+        streak.start = getDate(contribs[startDate]);
+
+        if (streak.amount === 0) {
+          streak.end = streak.start;
+        }
+
+        // If not current day and is the first streak, set the current streak
+        if (isCurrentStreak && i !== contribsLen) {
+          currentStreak = streak;
+          isCurrentStreak = false;
+        }
+
+        // Record if this is the longest streak encountered so far
+        if (streak.amount > longestStreak.amount) {
+          longestStreak = streak;
+        }
+
+        // Reset streak
+        streak = resetStreak();
+        newStreak = true;
       }
     }
 
-    // End of streak (no contributions for this day) or first day
-    if (count === 0 || i === 0) {
-      var startDate = i === contribsLen ? contribsLen : i + 1;
-      streak.start = getDate(contribs[startDate]);
 
-      if (streak.amount === 0) {
-        streak.end = streak.start;
-      }
+    // APPEND STATS TO PAGE
+    // =======================================================================
 
-      // If not the current day and is the first streak, set the current streak
-      if (isCurrentStreak && i !== contribsLen) {
-        currentStreak = streak;
-        isCurrentStreak = false;
-      }
+    contribContainer.appendChild(
+      createStatDiv('Year of contributions', 'total', totalContribs));
 
-      // Record if this is the longest streak encountered so far
-      if (streak.amount > longestStreak.amount) {
-        longestStreak = streak;
-      }
+    contribContainer.appendChild(
+      createStatDiv('Longest streak', 'days', longestStreak));
 
-      // Reset streak
-      streak = resetStreak();
-      newStreak = true;
+    contribContainer.appendChild(
+      createStatDiv('Current streak', 'days', currentStreak));
+  };
+
+  // WATCH FOR PAGE CHANGES
+  // ===========================================================================
+
+  // Create a MutationObserver to watch the contents of profile tabs
+  // (in case of XHR)
+  // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+  // var profileContent = document.getElementsByClassName('profilecols')[0];
+
+  // create an observer instance
+  // var observer = new MutationObserver(function(mutations) {
+    var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
+    if (contribGraph) {
+      initStats(contribGraph);
     }
-  }
+    // mutations.forEach(function(mutation) {
+    //   console.log('MUTATION', mutation);
+    // });
+  // });
 
+  // pass in the target node, as well as the observer options
+  // observer.observe(profileContent, { childList: true, subtree: true });
 
-  // APPEND STATS TO PAGE
-  // ==========================================================================
-
-  contribContainer.appendChild(createStatDiv('Year of contributions', 'total', totalContribs));
-  contribContainer.appendChild(createStatDiv('Longest streak', 'days', longestStreak));
-  contribContainer.appendChild(createStatDiv('Current streak', 'days', currentStreak));
+  // later, you can stop observing
+  // observer.disconnect();
 }
