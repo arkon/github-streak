@@ -76,7 +76,12 @@ if (document.body.classList.contains('page-profile')) {
   // FUNCTION TO CREATE STATS
   // ===========================================================================
 
-  var initStats = function (contribGraph) {
+  var initStats = function () {
+    var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
+    if (!contribGraph) {
+      return;
+    }
+
     var contribContainer = document.getElementById('contributions-calendar');
 
     var contribs    = contribGraph.querySelectorAll('rect.day');
@@ -160,28 +165,26 @@ if (document.body.classList.contains('page-profile')) {
       createStatDiv('Current streak', 'days', currentStreak));
   };
 
+
   // WATCH FOR PAGE CHANGES
   // ===========================================================================
 
-  // Create a MutationObserver to watch the contents of profile tabs
-  // (in case of XHR)
+  // Attempt to init on page load
+  initStats();
+
+  // Create a MutationObserver (in case of XHR)
   // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-  // var profileContent = document.getElementsByClassName('profilecols')[0];
+  var profileContent = document.getElementsByClassName('profilecols')[0];
 
-  // create an observer instance
-  // var observer = new MutationObserver(function(mutations) {
-    var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
-    if (contribGraph) {
-      initStats(contribGraph);
+  var observer = new MutationObserver(function (mutations) {
+    // TODO: make check better
+    if (document.querySelector('.js-calendar-graph-svg > g')) {
+      initStats();
     }
-    // mutations.forEach(function(mutation) {
-    //   console.log('MUTATION', mutation);
-    // });
-  // });
+  });
 
-  // pass in the target node, as well as the observer options
-  // observer.observe(profileContent, { childList: true, subtree: true });
+  // TODO: this doesn't work?
+  observer.observe(profileContent, { childList: true, subtree: true });
 
-  // later, you can stop observing
   // observer.disconnect();
 }
