@@ -1,3 +1,6 @@
+# v1.3.0 (2016-07-02)
+- Fix bug where the stats won't show up if you switch between tabs on a profile page
+
 # v1.2.0 (2016-07-02)
 - Fix bug with longest streak not working if it starts on the first day
 - Display "Rock – Hard Place" as the date range for 0 day streaks
