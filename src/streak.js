@@ -35,10 +35,9 @@ if (contribGraph) {
     var start = new Date(startDate);
     var end   = new Date(endDate);
 
-    var startYear = start.getUTCFullYear();
-    var endYear   = end.getUTCFullYear();
-
-    if (startYear === endYear) {
+    if (start.valueOf() === end.valueOf()) {
+      return 'Rock – Hard Place';
+    } else if (start.getUTCFullYear() === end.getUTCFullYear()) {
       return dateWithoutYear(start) + ' – ' + dateWithoutYear(end);
     } else {
       return dateWithYear(start) + ' – ' + dateWithYear(end);
