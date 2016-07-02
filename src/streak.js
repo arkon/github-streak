@@ -106,8 +106,8 @@ if (contribGraph) {
     // Tally up all contributions
     totalContribs.amount += count;
 
+    // If there's a contribution, add it to the current streak
     if (count > 0) {
-      // If there's a contribution, add it to the current streak
       streak.amount++;
 
       // Record the end date for a new streak
@@ -115,8 +115,10 @@ if (contribGraph) {
         streak.end = getDate(contribs[i]);
         newStreak = false;
       }
-    } else {
-      // End of streak (no contributions for this day)
+    }
+
+    // End of streak (no contributions for this day) or first day
+    if (count === 0 || i === 0) {
       var startDate = i === contribsLen ? contribsLen : i + 1;
       streak.start = getDate(contribs[startDate]);
 
@@ -141,7 +143,10 @@ if (contribGraph) {
     }
   }
 
-  // Append information to page
+
+  // APPEND STATS TO PAGE
+  // ==========================================================================
+
   contribContainer.appendChild(createStatDiv('Year of contributions', 'total', totalContribs));
   contribContainer.appendChild(createStatDiv('Longest streak', 'days', longestStreak));
   contribContainer.appendChild(createStatDiv('Current streak', 'days', currentStreak));
