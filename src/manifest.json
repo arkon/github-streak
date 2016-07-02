@@ -2,22 +2,21 @@
   "manifest_version": 2,
 
   "name": "GitHub Profile Streak",
-  "version": "1.1.0",
+  "short_name": "GitHub Streak",
+  "version": "1.2.0",
   "description": "Displays contribution stats and streak data on GitHub profiles.",
   "homepage_url": "https://github.com/arkon/github-streak",
+
+  "content_scripts": [{
+    "matches": ["*://github.com/*"],
+    "js": ["streak.js"],
+    "css": ["streak.css"],
+    "run_at": "document_end"
+  }],
 
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
     "128": "images/icon128.png"
-  },
-
-  "content_scripts": [
-    {
-      "matches": ["*://github.com/*"],
-      "js": ["streak.js"],
-      "css": ["streak.css"],
-      "run_at": "document_end"
-    }
-  ]
+  }
 }
