@@ -6,7 +6,7 @@ if (document.body.classList.contains('page-profile')) {
   // HELPER FUNCTIONS
   // ========================================================================
 
-  var resetStreak = function () {
+  const resetStreak = function () {
     return {
       amount : 0,
       start  : null,
@@ -14,54 +14,57 @@ if (document.body.classList.contains('page-profile')) {
     };
   };
 
-  var getDate = function (contribNode) {
+  const getDate = function (contribNode) {
     return contribNode.getAttribute('data-date');
   };
 
-  var MONTHS = [
+  const MONTHS = [
     'January', 'February', 'March', 'April',
     'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'
   ];
 
-  var dateWithoutYear = function (date) {
+  const dateWithoutYear = function (date) {
     return MONTHS[date.getUTCMonth()] + ' ' + date.getUTCDate();
   };
 
-  var dateWithYear = function (date) {
+  const dateWithYear = function (date) {
     return MONTHS[date.getUTCMonth()].slice(0, 3) + ' ' +
       date.getUTCDate() + ', ' +
       date.getUTCFullYear();
-  }
+  };
 
-  var createDateString = function (startDate, endDate) {
-    var start = new Date(startDate);
-    var end   = new Date(endDate);
+  const createDateString = function (startDate, endDate) {
+    const start = new Date(startDate);
+    const end   = new Date(endDate);
 
     if (start.valueOf() === end.valueOf()) {
+      // Same day
       return 'Rock – Hard Place';
     } else if (start.getUTCFullYear() === end.getUTCFullYear()) {
+      // Same year
       return dateWithoutYear(start) + ' – ' + dateWithoutYear(end);
     } else {
+      // Different year
       return dateWithYear(start) + ' – ' + dateWithYear(end);
     }
   };
 
-  var createStatDiv = function (header, type, data) {
-    var el = document.createElement('div');
+  const createStatDiv = function (header, type, data) {
+    const el = document.createElement('div');
     el.className = 'gh-streak-box';
 
-    var elHeader = document.createElement('p');
+    const elHeader = document.createElement('p');
     elHeader.className = 'gh-streak-box-header text-muted';
     elHeader.textContent = header;
 
-    var elStat = document.createElement('h1');
+    const elStat = document.createElement('h1');
     if (type === 'days' && data.amount === 1) {
       type = 'day';
     }
     elStat.textContent = data.amount + ' ' + type;
 
-    var elFooter = document.createElement('p');
+    const elFooter = document.createElement('p');
     elFooter.className = 'text-muted';
     elFooter.textContent = createDateString(data.start, data.end);
 
@@ -76,40 +79,39 @@ if (document.body.classList.contains('page-profile')) {
   // FUNCTION TO CREATE STATS
   // ===========================================================================
 
-  var initStats = function () {
-    var contribGraph = document.querySelector('.js-calendar-graph-svg > g');
+  const initStats = function () {
+    const contribGraph = document.querySelector('.js-calendar-graph-svg > g');
     if (!contribGraph) {
       return;
     }
 
-    var contribContainer = document.getElementById('contributions-calendar');
+    const contribContainer = document.getElementById('contributions-calendar');
 
-    var contribs    = contribGraph.querySelectorAll('rect.day');
-    var contribsLen = contribs.length - 1;
+    const contribs    = contribGraph.querySelectorAll('rect.day');
+    const contribsLen = contribs.length - 1;
 
     // Total contributions
-    var totalContribs   = resetStreak();
+    let totalContribs   = resetStreak();
     totalContribs.start = getDate(contribs[0]);
     totalContribs.end   = getDate(contribs[contribsLen]);
 
     // Longest streak
-    var longestStreak = resetStreak();
+    let longestStreak = resetStreak();
 
     // Current streak
-    var isCurrentStreak = true;
-    var currentStreak   = resetStreak();
+    let isCurrentStreak = true;
+    let currentStreak   = resetStreak();
 
 
     // TALLY UP THE STATS
     // =======================================================================
 
-    var streak = resetStreak();
-
-    var newStreak = true;
+    let streak = resetStreak();
+    let newStreak = true;
 
     // Start counting from the end up
-    for (var i = contribsLen; i >= 0; i--) {
-      var count = parseInt(contribs[i].getAttribute('data-count'), 10);
+    for (let i = contribsLen; i >= 0; i--) {
+      let count = parseInt(contribs[i].getAttribute('data-count'), 10);
 
       // Tally up all contributions
       totalContribs.amount += count;
@@ -127,7 +129,7 @@ if (document.body.classList.contains('page-profile')) {
 
       // End of streak (no contributions for this day) or first day
       if (count === 0 || i === 0) {
-        var startDate = i === contribsLen ? contribsLen : i + 1;
+        const startDate = i === contribsLen ? contribsLen : i + 1;
         streak.start = getDate(contribs[startDate]);
 
         if (streak.amount === 0) {
@@ -174,17 +176,16 @@ if (document.body.classList.contains('page-profile')) {
 
   // Create a MutationObserver (in case of XHR)
   // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-  var profileContent = document.getElementsByClassName('profilecols')[0];
+  const profileContent = document.getElementById('js-pjax-container');
 
-  var observer = new MutationObserver(function (mutations) {
+  const observer = new MutationObserver((mutations) => {
     // TODO: make check better
     if (document.querySelector('.js-calendar-graph-svg > g')) {
       initStats();
     }
   });
 
-  // TODO: this doesn't work?
-  observer.observe(profileContent, { childList: true, subtree: true });
+  observer.observe(profileContent, { childList: true });
 
   // observer.disconnect();
 }
