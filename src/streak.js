@@ -158,7 +158,7 @@ if (document.body.classList.contains('page-profile')) {
     // =======================================================================
 
     contribContainer.appendChild(
-      createStatDiv('Year of contributions', 'total', totalContribs));
+      createStatDiv('Contributions in the last year', 'total', totalContribs));
 
     contribContainer.appendChild(
       createStatDiv('Longest streak', 'days', longestStreak));
