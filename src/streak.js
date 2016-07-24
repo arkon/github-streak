@@ -62,7 +62,7 @@ if (document.body.classList.contains('page-profile')) {
     if (type === 'days' && data.amount === 1) {
       type = 'day';
     }
-    elStat.textContent = data.amount + ' ' + type;
+    elStat.textContent = data.amount.toLocaleString() + ' ' + type;
 
     const elFooter = document.createElement('p');
     elFooter.className = 'text-muted';
