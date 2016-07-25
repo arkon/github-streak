@@ -1,3 +1,6 @@
+# 1.4.0 (2016-07-25)
+- Wording/formatting tweaks
+
 # v1.3.0 (2016-07-02)
 - Fix bug where the stats won't show up if you switch between tabs on a profile page
 
