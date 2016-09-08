@@ -157,6 +157,13 @@ if (document.body.classList.contains('page-profile')) {
     // APPEND STATS TO PAGE
     // =======================================================================
 
+    // Remove existing stats, if present
+    const existingStats = Array.from(contribContainer.getElementsByClassName('gh-streak-box'));
+    for (let i = 0; i < existingStats.length; i++) {
+      contribContainer.removeChild(existingStats[i]);
+    }
+
+    // Create/add stats to page
     contribContainer.appendChild(
       createStatDiv('Contributions in the last year', 'total', totalContribs));
 

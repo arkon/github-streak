@@ -1,3 +1,6 @@
+# 1.4.1 (2016-09-08)
+- Fix duplicate streak data boxes being shown when going back to profile page
+
 # 1.4.0 (2016-07-25)
 - Wording/formatting tweaks
 
