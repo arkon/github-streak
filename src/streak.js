@@ -85,7 +85,7 @@ if (document.body.classList.contains('page-profile')) {
       return;
     }
 
-    const contribContainer = document.getElementById('contributions-calendar');
+    const contribContainer = document.querySelector('.js-contribution-graph > .border');
 
     const contribs    = contribGraph.querySelectorAll('rect.day');
     const contribsLen = contribs.length - 1;
@@ -165,7 +165,7 @@ if (document.body.classList.contains('page-profile')) {
 
     // Create/add stats to page
     contribContainer.appendChild(
-      createStatDiv('Contributions in the last year', 'total', totalContribs));
+      createStatDiv('Total contributions', 'total', totalContribs));
 
     contribContainer.appendChild(
       createStatDiv('Longest streak', 'days', longestStreak));
@@ -184,6 +184,7 @@ if (document.body.classList.contains('page-profile')) {
   // Create a MutationObserver (in case of XHR)
   // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
   const profileContent = document.getElementById('js-pjax-container');
+  const contribActivity = document.getElementById('js-contribution-activity');
 
   const observer = new MutationObserver((mutations) => {
     // TODO: make check better
@@ -193,6 +194,7 @@ if (document.body.classList.contains('page-profile')) {
   });
 
   observer.observe(profileContent, { childList: true });
+  observer.observe(contribActivity, { childList: true });
 
   // observer.disconnect();
 }
