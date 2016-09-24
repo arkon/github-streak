@@ -1,3 +1,6 @@
+# 1.5.0 (2016-09-24)
+- Support new GitHub profiles
+
 # 1.4.1 (2016-09-08)
 - Fix duplicate streak data boxes being shown when going back to profile page
 

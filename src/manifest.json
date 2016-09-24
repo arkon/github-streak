@@ -3,7 +3,7 @@
 
   "name": "GitHub Profile Streak",
   "short_name": "GitHub Streak",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Displays contribution stats and streak data on GitHub profiles.",
   "homepage_url": "https://github.com/arkon/github-streak",
 
