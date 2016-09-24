@@ -172,6 +172,12 @@ if (document.body.classList.contains('page-profile')) {
 
     contribContainer.appendChild(
       createStatDiv('Current streak', 'days', currentStreak));
+
+    // Remove number from title
+    const elTitle = document.querySelector('.js-contribution-graph > h2.f4');
+    if (elTitle) {
+      elTitle.innerText = elTitle.innerText.replace(/^\d*,?\.?\d* contributions/, 'Contributions');
+    }
   };
 
 
