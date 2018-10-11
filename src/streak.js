@@ -85,7 +85,7 @@ if (document.body.classList.contains('page-profile')) {
       return;
     }
 
-    const contribContainer = document.querySelector('.js-contribution-graph > .border');
+    const contribContainer = document.querySelector('.js-yearly-contributions');
 
     const contribs    = contribGraph.querySelectorAll('rect.day');
     const contribsLen = contribs.length - 1;
@@ -158,25 +158,37 @@ if (document.body.classList.contains('page-profile')) {
     // =======================================================================
 
     // Remove existing stats, if present
-    const existingStats = Array.from(contribContainer.getElementsByClassName('gh-streak-box'));
-    for (let i = 0; i < existingStats.length; i++) {
-      contribContainer.removeChild(existingStats[i]);
+    var statWrapperDiv = document.getElementById('gh-streak-wrapper');
+    if (statWrapperDiv) {
+      contribContainer.removeChild(statWrapperDiv);
     }
 
+    // Create wrapper for all stats
+    statWrapperDiv = document.createElement('div');
+    statWrapperDiv.className = 'position-relative';
+    statWrapperDiv.id = "gh-streak-wrapper";
+
+    var statWrapperDivBorderBox = document.createElement('div');
+    statWrapperDivBorderBox.className = 'border border-gray-dark border-top-0';
+
     // Create/add stats to page
-    contribContainer.appendChild(
+    statWrapperDivBorderBox.appendChild(
       createStatDiv('Total contributions', 'total', totalContribs));
 
-    contribContainer.appendChild(
+    statWrapperDivBorderBox.appendChild(
       createStatDiv('Longest streak', 'days', longestStreak));
 
-    contribContainer.appendChild(
+    statWrapperDivBorderBox.appendChild(
       createStatDiv('Current streak', 'days', currentStreak));
 
-    // Remove number from title
-    const elTitle = document.querySelector('.js-contribution-graph > h2.f4');
-    if (elTitle) {
-      elTitle.innerText = elTitle.innerText.replace(/^\d*,?\.?\d* contributions/, 'Contributions');
+    statWrapperDiv.appendChild(statWrapperDivBorderBox);
+
+    // Search for Sibling Activity Div and if present add before Sibling Div
+    const statWrapperSiblingDiv = document.getElementById('user-activity-overview');
+    if (statWrapperSiblingDiv) {
+      contribContainer.insertBefore(statWrapperDiv, statWrapperSiblingDiv);
+    } else {
+      contribContainer.appendChild(statWrapperDiv);
     }
   };
 
